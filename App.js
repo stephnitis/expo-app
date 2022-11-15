@@ -3,10 +3,12 @@ import { StyleSheet, Text, View, Image } from 'react-native';
 import ImageViewer from './Components/ImageViewer';
 import Button from './Components/Button'
 import * as ImagePicker from 'expo-image-picker';
+import {useState} from 'react';
 
 const PlaceholderImage = require('./assets/hole.jpeg');
 
 export default function App() {
+  const [selectedImage, setSelectedImage] = useState(null);
 
   const pickImageAsync = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -15,6 +17,7 @@ export default function App() {
     });
 
     if(!result.canceled){
+      setSelectedImage(result.assets[0].uri);
       console.log(result);
     } else {
       alert('You did not select an image');
@@ -25,7 +28,10 @@ export default function App() {
     <View style={styles.container}>
       <Text style={styles.header}>Big Tech Energy</Text>
       <View style={styles.imageContainer}>
-        <ImageViewer placeholderImageSource={PlaceholderImage} />
+        <ImageViewer 
+          placeholderImageSource={PlaceholderImage}
+          selectedImage={selectedImage}
+        />
       </View>
       <View style={styles.footerContainer}>
         <Button theme="primary" label="Choose a photo" onPress={pickImageAsync}/>
